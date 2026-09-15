@@ -39,7 +39,7 @@ const ARCHITECTURE = [
   'Clinic rules are pure functions: the PAP heuristic and the 2026 FPL sliding fee.',
   'Check-ins, PAP progress, and intake live in memory only; nothing is stored on the device.',
   'Every network screen has skeleton, empty, error-with-retry, and sample-data fallback states.',
-  'Expo SDK 55, strict TypeScript, React Navigation; imports into Expo Snack unchanged.',
+  'Expo SDK 56, strict TypeScript, React Navigation; imports into Expo Snack unchanged.',
 ];
 
 const LINKS = [
