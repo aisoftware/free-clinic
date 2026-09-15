@@ -11,7 +11,7 @@
 - TypeScript strict. Zero errors: run `npx tsc --noEmit` before every report. No `any` anywhere; raw FHIR shapes live in `lib/fhir/types.ts`.
 
 ## Data
-- Primary FHIR: https://r4.smarthealthit.org. Fallback: https://hapi.fhir.org/baseR4. Then bundled sample data in `data/sample/` with a visible banner.
+- FHIR source: https://r4.smarthealthit.org. Fallback: bundled sample data in `data/sample/` with a visible banner. No HAPI or other open community server (messy public uploads).
 - Browser requests must stay CORS-simple: GET with only an `Accept` header. SMART returns 403 to OPTIONS preflights.
 - All requests go through `lib/fhir/client.ts` `search<T>()`: 8 s timeout, one retry, then fallback. Returns `{ entries, total, source }`.
 - Patient-scoped queries go to the server the patient came from (ids do not cross servers).

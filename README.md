@@ -1,6 +1,6 @@
 # Free Clinic Companion
 
-A volunteer-facing mobile app for free and charitable clinics, built with Expo and TypeScript against FHIR R4. It runs in Expo Snack with no changes and talks directly to a public FHIR sandbox, with bundled synthetic data as a fallback.
+A volunteer-facing mobile app for free and charitable clinics, built with Expo and TypeScript against FHIR R4. It runs in Expo Snack with no changes and talks directly to the SMART Health IT FHIR sandbox, with bundled synthetic data as a fallback.
 
 > Synthetic data from public FHIR sandboxes. Not a medical record.
 
@@ -65,7 +65,7 @@ GET {base}/Observation?patient={id}&category=vital-signs&_sort=-date&_count=20
 GET {base}/Encounter?patient={id}&_sort=-date
 ```
 
-`{base}` is `https://r4.smarthealthit.org`, falling back to `https://hapi.fhir.org/baseR4`, then to bundled sample data with a visible "Sandbox unavailable, showing sample data" banner.
+`{base}` is `https://r4.smarthealthit.org`. If it cannot be reached, the app uses bundled sample data with a visible "Sandbox unavailable, showing sample data" banner.
 
 ## Architecture
 
@@ -90,7 +90,7 @@ theme/                  color, spacing, type scale, touch target
 
 There are no image files on `main`: the app uses vector icons, and the Expo template icons were removed so Snack's import has nothing to upload as an asset.
 
-- **Data layer.** One client runs every search with an 8 second timeout and one retry per server, then falls back SMART, HAPI, sample. A server that just failed is skipped for a minute so screens do not wait through the same timeouts again; pull to refresh retries it.
+- **Data layer.** One client runs every search with an 8 second timeout and one retry against SMART, then falls back to bundled sample data. After a failure, SMART is skipped for a minute so screens do not wait through the same timeouts again; pull to refresh retries it.
 - **Source pinning.** Resource ids only mean something on the server that issued them, so chart queries go to the server the patient came from. If that server fails, the chart shows an error with retry instead of quietly substituting another record.
 - **Role gating.** A single `can(role, capability)` table in `lib/roles.ts`. Locked chart tabs never mount, the PAP queue never searches for roles without access, and the About screen renders the same table.
 - **Error handling.** Every network-backed screen has skeleton loading, empty, error with retry, and sample-data fallback states, so the demo never shows a blank screen or an unhandled error.
@@ -127,7 +127,7 @@ Then update the SDK line in `CLAUDE.md` and this section, and re-run the SNACK.m
 | Preflight `OPTIONS` | 403, so requests must stay CORS-simple | not needed |
 | Patient-scoped searches used by the app | all 200 | not exercised (fallback only) |
 
-SMART is the primary source.
+SMART is the primary source. HAPI was the brief's second fallback, but it was removed on 2026-09-15 (see Decisions).
 
 **Dependencies** (all installed with `npx expo install` for SDK 56)
 
@@ -152,7 +152,7 @@ One substitution: `@react-navigation/native-stack` was replaced with the JavaScr
 | Production web bundle (`npx expo export --platform web`) | 1.6 MB JavaScript |
 | Cold start to interactive Today screen, empty cache (median of 3) | 88 ms local; 1.8 s with 4G emulation (9 Mbps, 85 ms RTT, uncompressed) and 4x CPU slowdown |
 | Cold start to live patient rows rendered, same conditions | 0.3 s local; 2.1 s with 4G emulation and 4x CPU slowdown |
-| Offline fallback | FHIR hosts blocked in the browser: SMART tried twice, HAPI twice, then sample data with the banner |
+| Offline fallback | FHIR host blocked in the browser: SMART tried twice, then sample data with the banner |
 
 Native-only behavior (gestures, keyboard, Dynamic Type, safe areas) is covered by the device checklist in SNACK.md.
 
@@ -161,6 +161,7 @@ Native-only behavior (gestures, keyboard, Dynamic Type, safe areas) is covered b
 Choices made during the build, noted here as the brief asked.
 
 - **SDK 56** instead of 57, because Snack does not support 57 yet (see the verification log).
+- **No HAPI fallback.** The brief called for SMART, then the HAPI public server, then sample data. During a SMART outage on 2026-09-15 the app fell back to HAPI as designed and showed unnamed patients, patients with no identifiers, and placeholder names, because HAPI's public server holds uploads from anyone. SMART now falls back directly to the bundled sample data, which is clean and clearly labeled.
 - **Default role is Nurse**, which sees the full chart, so a first look shows the most. Role changes apply everywhere immediately.
 - **Locked tabs stay visible** with a lock icon and a one-line reason instead of disappearing, so "minimum necessary" is visible rather than implied.
 - **Only the MRN is shown.** SMART records also carry SSN, driver license, and passport identifiers; the mapper never reads them. Sandbox MRNs are UUIDs, so the list shows the first eight characters and the chart shows the full value.
@@ -180,7 +181,7 @@ Choices made during the build, noted here as the brief asked.
 - SMART's synthetic records were generated by Synthea around 2019 to 2021, so visit dates are years old, and four of the first twenty patients are deceased in the record.
 - Among those twenty patients, heart rate and SpO2 do not appear in the most recent twenty vital-sign observations, so those cards read "Not recorded".
 - None of those patients has a Coverage resource, and only one has an active PAP-listed medication (Kyleena), so the live PAP queue shows one item worth an estimated $1,100. The bundled sample data yields nine items worth $4,600, with one patient excluded by Medicare coverage.
-- The HAPI public server holds data uploaded by anyone and is only used as a fallback.
+- On 2026-09-15 the SMART sandbox returned HTTP 502 for every request for a period, so the sample-data fallback is not hypothetical.
 
 ## What I would do next for a real clinic deployment
 

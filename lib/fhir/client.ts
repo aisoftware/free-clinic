@@ -1,17 +1,15 @@
 import { searchSample } from '../../data/sample';
 import type { Bundle, ResourceByType, ResourceType } from './types';
 
-export type DataSource = 'smart' | 'hapi' | 'sample';
+export type DataSource = 'smart' | 'sample';
 export type RemoteSource = Exclude<DataSource, 'sample'>;
 
 export const SERVERS: Record<RemoteSource, { label: string; baseUrl: string }> = {
   smart: { label: 'SMART Health IT R4 sandbox', baseUrl: 'https://r4.smarthealthit.org' },
-  hapi: { label: 'HAPI FHIR public R4 server', baseUrl: 'https://hapi.fhir.org/baseR4' },
 };
 
 export const SOURCE_LABELS: Record<DataSource, string> = {
   smart: SERVERS.smart.label,
-  hapi: SERVERS.hapi.label,
   sample: 'Bundled sample data',
 };
 
@@ -162,8 +160,12 @@ function recentlyFailed(source: RemoteSource) {
 }
 
 /**
- * Typed FHIR search. Unpinned searches try SMART, then HAPI, then bundled sample data, so the
+ * Typed FHIR search. Unpinned searches try the SMART sandbox, then bundled sample data, so the
  * demo never shows a blank screen. Pinned searches stay on one server and surface errors.
+ *
+ * There is deliberately no second public server: open community servers such as HAPI hold
+ * uploads from anyone, often unnamed or malformed patients, which is worse for a clinic demo
+ * than clearly labeled synthetic sample data.
  */
 export async function search<K extends ResourceType>(
   resourceType: K,
@@ -185,7 +187,7 @@ export async function search<K extends ResourceType>(
 
   // A server that just failed is skipped for a minute so every screen does not wait through the
   // same timeouts again; pull to refresh overrides this.
-  const order: RemoteSource[] = ['smart', 'hapi'];
+  const order: RemoteSource[] = ['smart'];
   const candidates = options.fresh ? order : order.filter((s) => !recentlyFailed(s));
   for (const source of candidates) {
     try {
@@ -193,7 +195,7 @@ export async function search<K extends ResourceType>(
       publish(source);
       return result;
     } catch {
-      // Fall through to the next server; the final fallback below is always available.
+      // Fall through; the bundled sample data below is always available.
     }
   }
   publish('sample');

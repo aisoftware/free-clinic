@@ -8,23 +8,17 @@ import { colors, spacing, type } from '../theme';
 /** Tells the volunteer, on every screen, when they are not looking at the primary sandbox. */
 export function SourceBanner() {
   const source = useSyncExternalStore(sourceStatus.subscribe, sourceStatus.get, sourceStatus.get);
-  if (source !== 'sample' && source !== 'hapi' && source !== 'forced') return null;
+  if (source !== 'sample' && source !== 'forced') return null;
 
-  const sample = source !== 'hapi';
-  const message =
-    source === 'forced'
-      ? 'Showing bundled sample data (switch in About)'
-      : source === 'sample'
-        ? 'Sandbox unavailable, showing sample data'
-        : 'Primary sandbox unavailable, using the HAPI public server';
+  const message = source === 'forced' ? 'Showing bundled sample data (switch in About)' : 'Sandbox unavailable, showing sample data';
   return (
     <View
-      style={[styles.banner, sample ? styles.sample : styles.hapi]}
+      style={styles.banner}
       accessibilityRole="alert"
       accessibilityLiveRegion="polite"
     >
-      <Ionicons name={sample ? 'cloud-offline-outline' : 'swap-horizontal-outline'} size={18} color={sample ? colors.warning : colors.info} />
-      <Text style={[styles.text, { color: sample ? colors.warning : colors.info }]}>
+      <Ionicons name="cloud-offline-outline" size={18} color={colors.warning} />
+      <Text style={styles.text}>
         {message}
       </Text>
     </View>
@@ -38,8 +32,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
+    backgroundColor: colors.warningMuted,
   },
-  sample: { backgroundColor: colors.warningMuted },
-  hapi: { backgroundColor: colors.infoMuted },
-  text: { ...type.caption, fontWeight: '600', flexShrink: 1 },
+  text: { ...type.caption, fontWeight: '600', flexShrink: 1, color: colors.warning },
 });

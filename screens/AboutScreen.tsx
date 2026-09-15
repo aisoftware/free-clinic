@@ -33,7 +33,7 @@ const QUERIES = [
 
 const ARCHITECTURE = [
   'Screens render view models only; mappers in lib/fhir convert raw FHIR resources.',
-  'One typed client runs every search: 8 s timeout, one retry, then SMART, HAPI, and bundled sample data in turn.',
+  'One typed client runs every search: 8 s timeout and one retry against SMART, then clearly labeled bundled sample data.',
   'Chart queries stay on the server the patient came from; a failure offers retry, never another record.',
   'Role gating is one can(role, capability) table; locked tabs never request their data.',
   'Clinic rules are pure functions: the PAP heuristic and the 2026 FPL sliding fee.',
@@ -104,7 +104,7 @@ export function AboutScreen() {
               <Text style={styles.strong}>{source === 'forced' ? SOURCE_LABELS.sample : source ? SOURCE_LABELS[source] : 'Not loaded yet'}</Text>
             </Text>
             <Text style={styles.caption}>Primary: {SERVERS.smart.baseUrl}</Text>
-            <Text style={styles.caption}>Fallback: {SERVERS.hapi.baseUrl}, then bundled sample data</Text>
+            <Text style={styles.caption}>Fallback: bundled synthetic sample data, with a banner on every screen</Text>
             <View style={styles.switchRow}>
               <Text style={[styles.body, styles.flex]}>Use bundled sample data only</Text>
               <Switch

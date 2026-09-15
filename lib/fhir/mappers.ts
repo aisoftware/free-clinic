@@ -158,7 +158,7 @@ export function coverageStatusFrom(result: { entries: Coverage[] } | Error): Cov
 
 export type VitalKind = 'bp' | 'hr' | 'temp' | 'weight' | 'bmi' | 'spo2';
 
-// LOINC codes seen across Synthea, SMART, and HAPI data for the same measurement.
+// LOINC codes used across Synthea, SMART, and other R4 servers for the same measurement.
 const VITAL_CODES: Record<VitalKind, string[]> = {
   bp: ['85354-9', '55284-4'],
   hr: ['8867-4'],
