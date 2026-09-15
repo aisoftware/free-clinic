@@ -78,7 +78,8 @@ export function toPatientVM(p: Patient, source: DataSource): PatientVM {
     givenFirst: [given, family].filter(Boolean).join(' ') || display,
     birthDate: p.birthDate ?? null,
     birthDateLabel: formatDate(p.birthDate),
-    age: ageFrom(p.birthDate),
+    // Age stops at the date of death; a record should never report a deceased patient aging on.
+    age: ageFrom(p.birthDate, p.deceasedDateTime ? new Date(p.deceasedDateTime) : undefined),
     sex: SEX_LABELS[p.gender ?? 'unknown'] ?? 'Unknown',
     mrn,
     mrnShort: mrn && mrn.length > 14 ? `${mrn.slice(0, 8).toUpperCase()}...` : mrn,

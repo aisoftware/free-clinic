@@ -68,18 +68,21 @@ function publish(source: DataSource) {
   listeners.forEach((l) => l());
 }
 
+/** 'forced' means sample data was chosen on the About screen rather than reached by fallback. */
+export type SourceSnapshot = DataSource | 'forced' | null;
+
 export const sourceStatus = {
   subscribe(listener: Listener) {
     listeners.add(listener);
     return () => listeners.delete(listener);
   },
-  get: () => lastSource,
+  get: (): SourceSnapshot => (forceSample ? 'forced' : lastSource),
 };
 
 /** Demo control: lets a reviewer see the offline experience without disabling the network. */
 export function setForceSample(value: boolean) {
   forceSample = value;
-  if (value) publish('sample');
+  listeners.forEach((l) => l());
 }
 
 export function isForcingSample() {

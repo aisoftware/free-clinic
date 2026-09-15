@@ -108,7 +108,9 @@ export function PatientsScreen({ navigation }: Props) {
 }
 
 function PatientRow({ patient, status, onPress }: { patient: PatientVM; status: ReturnType<typeof checkInStatusOf>; onPress: () => void }) {
-  const meta = [patient.age !== null ? `${patient.age} y` : 'Age unknown', patient.sex].join(' · ');
+  const meta = [patient.age !== null ? `${patient.age} y` : 'Age unknown', patient.sex, patient.deceased ? 'Deceased' : null]
+    .filter(Boolean)
+    .join(' · ');
   return (
     <Pressable
       onPress={onPress}

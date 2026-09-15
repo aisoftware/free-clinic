@@ -8,9 +8,15 @@ import { colors, spacing, type } from '../theme';
 /** Tells the volunteer, on every screen, when they are not looking at the primary sandbox. */
 export function SourceBanner() {
   const source = useSyncExternalStore(sourceStatus.subscribe, sourceStatus.get, sourceStatus.get);
-  if (source !== 'sample' && source !== 'hapi') return null;
+  if (source !== 'sample' && source !== 'hapi' && source !== 'forced') return null;
 
-  const sample = source === 'sample';
+  const sample = source !== 'hapi';
+  const message =
+    source === 'forced'
+      ? 'Showing bundled sample data (switch in About)'
+      : source === 'sample'
+        ? 'Sandbox unavailable, showing sample data'
+        : 'Primary sandbox unavailable, using the HAPI public server';
   return (
     <View
       style={[styles.banner, sample ? styles.sample : styles.hapi]}
@@ -19,7 +25,7 @@ export function SourceBanner() {
     >
       <Ionicons name={sample ? 'cloud-offline-outline' : 'swap-horizontal-outline'} size={18} color={sample ? colors.warning : colors.info} />
       <Text style={[styles.text, { color: sample ? colors.warning : colors.info }]}>
-        {sample ? 'Sandbox unavailable, showing sample data' : 'Primary sandbox unavailable, using the HAPI public server'}
+        {message}
       </Text>
     </View>
   );

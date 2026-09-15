@@ -100,7 +100,8 @@ export function AboutScreen() {
           <SectionTitle>Data source</SectionTitle>
           <Card style={styles.gap}>
             <Text style={styles.body}>
-              Currently showing: <Text style={styles.strong}>{source ? SOURCE_LABELS[source] : 'Not loaded yet'}</Text>
+              Currently showing:{' '}
+              <Text style={styles.strong}>{source === 'forced' ? SOURCE_LABELS.sample : source ? SOURCE_LABELS[source] : 'Not loaded yet'}</Text>
             </Text>
             <Text style={styles.caption}>Primary: {SERVERS.smart.baseUrl}</Text>
             <Text style={styles.caption}>Fallback: {SERVERS.hapi.baseUrl}, then bundled sample data</Text>
