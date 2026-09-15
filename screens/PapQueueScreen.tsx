@@ -1,10 +1,10 @@
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useEffect, useMemo, useRef } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Card } from '../components/Card';
 import { LockNotice } from '../components/LockNotice';
 import { Screen } from '../components/Screen';
+import { useHeaderHeight } from '../navigation/Header';
 import { EmptyState, ErrorState, SkeletonRows } from '../components/StateViews';
 import { search } from '../lib/fhir/client';
 import { PatientVM, toPatientVM } from '../lib/fhir/mappers';

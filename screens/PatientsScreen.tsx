@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
 import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -10,6 +9,7 @@ import { EmptyState, ErrorState, SkeletonRows } from '../components/StateViews';
 import { search } from '../lib/fhir/client';
 import { PatientVM, toPatientVM } from '../lib/fhir/mappers';
 import { can } from '../lib/roles';
+import type { StackScreenProps } from '../navigation/navigators';
 import type { PatientsStackParamList } from '../navigation/types';
 import { checkInStatusOf, useAppState } from '../state/AppState';
 import { useQuery } from '../state/useQuery';

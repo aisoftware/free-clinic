@@ -1,4 +1,3 @@
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -6,6 +5,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import { Button } from '../components/Button';
 import { LockNotice } from '../components/LockNotice';
 import { Screen } from '../components/Screen';
+import { useHeaderHeight } from '../navigation/Header';
 import { INTAKE_STRINGS } from '../lib/i18n/intake';
 import { can } from '../lib/roles';
 import { useAppState } from '../state/AppState';

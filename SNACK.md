@@ -26,7 +26,7 @@ So `main` has no PNG, SVG, font, or other binary files: the Expo template icons 
 
 ### Dependencies Snack cannot build
 
-Snack builds each dependency that is not preloaded with its own package service. That service currently fails on `react-native-screens` 4.19 and later, which is why the app uses the JavaScript stack navigator and does not depend on `react-native-screens`. If Snack shows "Failed to resolve dependency" after an upgrade, check the package with:
+Snack builds each dependency that is not preloaded with its own package service. That service currently fails on `react-native-screens` 4.19 and later. The app therefore uses its own tab and stack navigators on `@react-navigation/native` and has no dependency that needs `react-native-screens`. If Snack shows "Failed to resolve dependency" after an upgrade, check the package with:
 
 ```
 https://snackager.eascdn.net/bundle/<name>@<version>?version_snackager=true&sdkVersion=56.0.0&platforms=ios,android,web
@@ -34,7 +34,7 @@ https://snackager.eascdn.net/bundle/<name>@<version>?version_snackager=true&sdkV
 
 A response with a `handle` field is built; `"pending": true` means try again in a minute; "Module build failed" means Snack cannot load that version.
 
-After import, Snack's Problems panel shows one expected warning: `@react-navigation/stack` and `@react-navigation/bottom-tabs` list `react-native-screens` as a peer dependency. **Do not select "Add dependency"** for it; adding `react-native-screens` brings back the build failure. Both navigators work without it.
+A fresh import should show no problems. If a Snack shows `Failed to resolve dependency 'react-native-screens@...'`, that Snack has `react-native-screens` in its `package.json`, usually from an earlier import or from selecting "Add dependency" on an older version. Delete that line from the Snack's `package.json`, or import the repository again into a new Snack.
 
 ### Snack title
 

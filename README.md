@@ -71,7 +71,7 @@ GET {base}/Encounter?patient={id}&_sort=-date
 
 ```
 App.tsx                 entry (Snack and local)
-navigation/             bottom tabs plus the Patients stack (JS stack navigator)
+navigation/             tab and stack navigators on React Navigation's routers, header, route types
 screens/                Today, Patients, PatientDetail (+ patient/ tabs), Intake (+ intake/ steps), PapQueue, About
 components/             Screen wrapper (banner and footer), state views, form controls, signature pad, sparkline
 lib/fhir/client.ts      search<K>(resourceType, params, options) -> { entries, total, source }
@@ -135,12 +135,11 @@ SMART is the primary source. HAPI was the brief's second fallback, but it was re
 | --- | --- | --- |
 | `expo`, `react`, `react-native`, `react-native-web`, `react-dom` | runtime | core modules |
 | `react-native-safe-area-context`, `@expo/vector-icons` | safe areas, icons | bundled in Snack |
-| `@react-navigation/native`, `stack`, `bottom-tabs`, `elements` | navigation, header height for keyboard avoidance | built by Snack's package service |
-| `react-native-gesture-handler` | stack navigator gestures | bundled in Snack |
-| `react-native-svg`, `@react-native-masked-view/masked-view` | sparklines and signature pad; header back-button mask | built by Snack's package service; native code included in Expo Go |
+| `@react-navigation/native` | navigation container, routers, and navigator builder | built by Snack's package service |
+| `react-native-svg` | sparklines and signature pad | built by Snack's package service; native code included in Expo Go |
 | `expo-clipboard`, `expo-status-bar` | Copy JSON, status bar | Expo modules included in Expo Go |
 
-One substitution: `@react-navigation/native-stack` was replaced with the JavaScript `@react-navigation/stack`, and `react-native-screens` was removed. Snack's package service fails to build `react-native-screens` 4.19 through 4.26 (a codegen error in `FullWindowOverlayNativeComponent.ts`), so a native-stack Snack cannot load; bottom tabs and the JS stack only use `react-native-screens` when it is present. Every remaining dependency was confirmed to build on Snack for SDK 56. `expo-router` was not used, as required. No FHIR typings package was added; the hand-written types cover the seven resources used.
+One substitution: the published `@react-navigation/bottom-tabs`, `stack`, and `native-stack` packages were replaced by a small tab navigator and stack navigator in `navigation/navigators.tsx`, built on `@react-navigation/native`'s own `TabRouter`, `StackRouter`, and `useNavigationBuilder`. Snack's package service fails to build `react-native-screens` 4.19 through 4.26 (a codegen error in its native component specs). `native-stack` requires it outright, and `bottom-tabs` and `stack` declare it as a peer dependency, which puts a red "requires peer-dependency" bar with an "Add dependency" button on every Snack load; selecting it breaks the Snack. The in-house navigators keep React Navigation's state, actions, nested navigation, and Android back handling, and every remaining dependency was confirmed to build on Snack for SDK 56. `expo-router` was not used, as required. No FHIR typings package was added; the hand-written types cover the seven resources used.
 
 **Quality checks**
 

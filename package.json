@@ -4,18 +4,13 @@
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
-    "@react-native-masked-view/masked-view": "0.3.2",
-    "@react-navigation/bottom-tabs": "^7.19.1",
-    "@react-navigation/elements": "^2.9.42",
     "@react-navigation/native": "^7.4.1",
-    "@react-navigation/stack": "^7.11.1",
     "expo": "~56.0.21",
     "expo-clipboard": "~56.0.4",
     "expo-status-bar": "~56.0.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.85.3",
-    "react-native-gesture-handler": "~2.31.1",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-svg": "15.15.4",
     "react-native-web": "^0.21.2"

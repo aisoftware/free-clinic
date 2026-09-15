@@ -1,4 +1,3 @@
-import type { StackScreenProps } from '@react-navigation/stack';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -8,6 +7,7 @@ import { Screen } from '../components/Screen';
 import { Segment, SegmentedTabs } from '../components/SegmentedTabs';
 import type { PatientVM } from '../lib/fhir/mappers';
 import { Capability, can } from '../lib/roles';
+import type { StackScreenProps } from '../navigation/navigators';
 import type { PatientsStackParamList } from '../navigation/types';
 import { checkInStatusOf, useAppState } from '../state/AppState';
 import { colors, spacing, type } from '../theme';

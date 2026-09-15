@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { ComponentProps, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -10,11 +9,12 @@ import { Screen } from '../components/Screen';
 import { search } from '../lib/fhir/client';
 import { toPatientVM } from '../lib/fhir/mappers';
 import { Capability, can, isReadOnly, ROLES } from '../lib/roles';
+import type { TabScreenProps } from '../navigation/navigators';
 import type { RootTabParamList } from '../navigation/types';
 import { CheckIn, CheckInStatus, useAppState } from '../state/AppState';
 import { colors, radius, shadow, spacing, touchTarget, type } from '../theme';
 
-type Props = BottomTabScreenProps<RootTabParamList, 'TodayTab'>;
+type Props = TabScreenProps<RootTabParamList, 'TodayTab'>;
 type IconName = ComponentProps<typeof Ionicons>['name'];
 type Destination = 'patients' | 'intake' | 'pap';
 

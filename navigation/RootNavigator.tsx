@@ -1,7 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { ComponentProps } from 'react';
 
 import { RoleHeaderButton } from '../components/RolePicker';
@@ -11,11 +9,11 @@ import { PapQueueScreen } from '../screens/PapQueueScreen';
 import { PatientDetailScreen } from '../screens/PatientDetailScreen';
 import { PatientsScreen } from '../screens/PatientsScreen';
 import { TodayScreen } from '../screens/TodayScreen';
-import { colors, type } from '../theme';
+import { colors } from '../theme';
+import { createStackNavigator, createTabNavigator } from './navigators';
 import type { PatientsStackParamList, RootTabParamList } from './types';
 
-const Tab = createBottomTabNavigator<RootTabParamList>();
-// JS stack rather than native-stack: Snack's package builder cannot build current react-native-screens.
+const Tab = createTabNavigator<RootTabParamList>();
 const PatientsStack = createStackNavigator<PatientsStackParamList>();
 
 const navTheme = {
@@ -31,11 +29,7 @@ const tabIcon =
 function PatientsNavigator() {
   return (
     <PatientsStack.Navigator
-      screenOptions={{
-        headerTitleStyle: { ...type.heading, color: colors.text },
-        headerTintColor: colors.primary,
-        headerRight: () => <RoleHeaderButton />,
-      }}
+      screenOptions={{ headerRight: () => <RoleHeaderButton /> }}
     >
       <PatientsStack.Screen name="PatientList" component={PatientsScreen} options={{ title: 'Patients' }} />
       <PatientsStack.Screen name="PatientDetail" component={PatientDetailScreen} options={{ title: 'Patient chart' }} />
@@ -48,13 +42,7 @@ export function RootNavigator() {
     <NavigationContainer theme={navTheme}>
       <Tab.Navigator
         initialRouteName="TodayTab"
-        screenOptions={{
-          tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.textMuted,
-          tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
-          headerTitleStyle: { ...type.heading, color: colors.text },
-          headerRight: () => <RoleHeaderButton />,
-        }}
+        screenOptions={{ headerRight: () => <RoleHeaderButton /> }}
       >
         <Tab.Screen
           name="TodayTab"
