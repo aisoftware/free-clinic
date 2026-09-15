@@ -6,9 +6,9 @@ A volunteer-facing mobile app for free and charitable clinics, built with Expo a
 
 | Patients (live SMART sandbox) | Patient chart, Vitals (live SMART sandbox) | PAP Queue (bundled sample data) |
 | --- | --- | --- |
-| ![Patients list](docs/screenshots/patients.png) | ![Patient detail vitals tab](docs/screenshots/patient-vitals.png) | ![PAP queue](docs/screenshots/pap-queue.png) |
+| ![Patients list](https://raw.githubusercontent.com/aisoftware/free-clinic/screenshots/patients.png) | ![Patient detail vitals tab](https://raw.githubusercontent.com/aisoftware/free-clinic/screenshots/patient-vitals.png) | ![PAP queue](https://raw.githubusercontent.com/aisoftware/free-clinic/screenshots/pap-queue.png) |
 
-Screenshots are from the web preview at a 390x844 viewport (2x), captured with Playwright against `npx expo start --web`. Device screenshots will replace them. The PAP Queue capture uses bundled sample data because the live sandbox currently yields a single candidate (see [Data notes](#data-notes)).
+Screenshots are from the web preview at a 390x844 viewport (2x), captured with Playwright against `npx expo start --web`. Device screenshots will replace them. The images live on the `screenshots` branch, because Snack's Git import currently fails on any repository that contains image files (see SNACK.md). The PAP Queue capture uses bundled sample data because the live sandbox currently yields a single candidate (see [Data notes](#data-notes)).
 
 ## Who this is for
 
@@ -88,6 +88,8 @@ data/sample/            synthetic fallback data and an in-memory search
 theme/                  color, spacing, type scale, touch target
 ```
 
+There are no image files on `main`: the app uses vector icons, and the Expo template icons were removed so Snack's import has nothing to upload as an asset.
+
 - **Data layer.** One client runs every search with an 8 second timeout and one retry per server, then falls back SMART, HAPI, sample. A server that just failed is skipped for a minute so screens do not wait through the same timeouts again; pull to refresh retries it.
 - **Source pinning.** Resource ids only mean something on the server that issued them, so chart queries go to the server the patient came from. If that server fails, the chart shows an error with retry instead of quietly substituting another record.
 - **Role gating.** A single `can(role, capability)` table in `lib/roles.ts`. Locked chart tabs never mount, the PAP queue never searches for roles without access, and the About screen renders the same table.
@@ -103,7 +105,7 @@ Checked on 2026-09-15.
 | --- | --- |
 | Latest Expo SDK (`exp.host/--/api/v2/versions`) | SDK 57.0.0 (React Native 0.86.3), released 2026-06-30 |
 | Snack SDK support (snack.expo.dev bundle and `expo/snack` source) | SDKs 50 to 56. SDK 56 is present but hidden from the picker and pinned to `56.0.0-preview.7`. SDK 57 is an open pull request (expo/snack#691). Default SDK is 54. |
-| Snack Git import | Infers the SDK from the `expo` version in `package.json` and reads only `dependencies`. |
+| Snack Git import | Infers the SDK from the `expo` version in `package.json` and reads only `dependencies`. Every non-code file is uploaded as an asset, and on 2026-09-15 that upload fails for all repositories (reproduced with Snack's own example repository), so `main` carries no image files. |
 | Expo Go in the App Store and Play Store | 57.0.9, which runs SDK 57 projects only |
 
 **Decision: built on SDK 56**, per the fallback rule. The Snack web preview works on SDK 56 today. Phones need an SDK 56 Expo Go client until Snack supports 57 (details in SNACK.md). When Snack ships SDK 57:

@@ -12,7 +12,17 @@
 8. Open the project settings (the Snack name at the top of the editor) and set the title and description below. Save.
 9. Copy the Snack URL into the README (top of the file) and into the LinkedIn first comment.
 
-Snack imports every file in the repository, so `README.md`, `SNACK.md`, `CLAUDE.md`, and `docs/screenshots` appear in the Snack's file list. They do not affect the app.
+Snack imports every file in the repository, so `README.md`, `SNACK.md`, and `CLAUDE.md` appear in the Snack's file list. They do not affect the app.
+
+### Keep image files off `main`
+
+Snack's importer uploads every file that is not `.ts`, `.tsx`, `.js`, `.jsx`, `.json`, or `.md` as an asset. On 2026-09-15 that upload fails for every repository, including Snack's own example, with:
+
+```
+Failed to create snack: Error generating snackObj: Error parsing files: Failed to upload file asset ({"errors":[{"code":"VALIDATION_ERROR", ... "message":"\"$\": Required." ...
+```
+
+So `main` has no PNG, SVG, font, or other binary files: the Expo template icons were removed from `assets/` and `app.json`, and README screenshots live on the `screenshots` branch. If you see this error again, run `git ls-files | grep -vE '\.(tsx?|jsx?|json|md)$'` and move anything listed (other than dotfiles) off `main`. Once Snack fixes asset uploads, app icons can come back.
 
 ### Snack title
 
