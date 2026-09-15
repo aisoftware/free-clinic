@@ -6,8 +6,8 @@
 - Single Expo project at root, one package.json, `App.tsx` is the entry (`main: node_modules/expo/AppEntry.js`).
 - No expo-router, no `app/` directory, no metro.config.js, no app.config.ts, no tsconfig path aliases (relative imports only).
 - No binary files on `main` (images, fonts, SVG files): Snack's Git import fails uploading them. Screenshots go on the `screenshots` branch.
-- Navigation: @react-navigation/native with native-stack and bottom-tabs.
-- Dependencies: Expo-maintained or Expo Go bundled only (react-native-svg, expo-clipboard, @expo/vector-icons). No dev-build native modules. Add with `npx expo install`.
+- Navigation: @react-navigation/native with stack (JS) and bottom-tabs. Not native-stack: Snack's package builder fails on react-native-screens 4.19+, so react-native-screens is not a dependency.
+- Dependencies: Expo-maintained or Expo Go bundled only. No dev-build native modules. Add with `npx expo install`, then confirm Snack can build it: `https://snackager.eascdn.net/bundle/<name>@<version>?version_snackager=true&sdkVersion=56.0.0&platforms=ios,android,web` must return a `handle`.
 - TypeScript strict. Zero errors: run `npx tsc --noEmit` before every report. No `any` anywhere; raw FHIR shapes live in `lib/fhir/types.ts`.
 
 ## Data

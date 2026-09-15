@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { ComponentProps } from 'react';
 
 import { RoleHeaderButton } from '../components/RolePicker';
@@ -15,7 +15,8 @@ import { colors, type } from '../theme';
 import type { PatientsStackParamList, RootTabParamList } from './types';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
-const PatientsStack = createNativeStackNavigator<PatientsStackParamList>();
+// JS stack rather than native-stack: Snack's package builder cannot build current react-native-screens.
+const PatientsStack = createStackNavigator<PatientsStackParamList>();
 
 const navTheme = {
   ...DefaultTheme,

@@ -28,7 +28,7 @@ export function Button({ label, onPress, variant = 'primary', icon, disabled, st
       accessibilityState={{ disabled: !!disabled }}
       style={({ pressed }) => [
         styles.base,
-        styles[variant],
+        VARIANT_STYLES[variant],
         pressed && styles.pressed,
         disabled && styles.disabled,
         style,
@@ -58,3 +58,9 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.45 },
   label: { ...type.bodyStrong, textAlign: 'center', flexShrink: 1 },
 });
+
+const VARIANT_STYLES: Record<Variant, ViewStyle> = {
+  primary: styles.primary,
+  secondary: styles.secondary,
+  ghost: styles.ghost,
+};

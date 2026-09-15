@@ -43,7 +43,9 @@ export const touchTarget = 44;
 
 const family = Platform.select({ ios: 'System', android: 'sans-serif', default: 'System' });
 
-export const type = {
+type TypeStyle = 'title' | 'heading' | 'body' | 'bodyStrong' | 'caption' | 'label' | 'mono';
+
+export const type: Record<TypeStyle, TextStyle> = {
   title: { fontFamily: family, fontSize: 24, lineHeight: 30, fontWeight: '700' },
   heading: { fontFamily: family, fontSize: 18, lineHeight: 24, fontWeight: '600' },
   body: { fontFamily: family, fontSize: 16, lineHeight: 22, fontWeight: '400' },
@@ -55,7 +57,7 @@ export const type = {
     fontSize: 12,
     lineHeight: 17,
   },
-} satisfies Record<string, TextStyle>;
+};
 
 export const shadow = Platform.select({
   web: { boxShadow: '0 1px 2px rgba(21, 32, 43, 0.08)' },

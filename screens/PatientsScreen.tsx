@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
 import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -15,7 +15,7 @@ import { checkInStatusOf, useAppState } from '../state/AppState';
 import { useQuery } from '../state/useQuery';
 import { colors, radius, shadow, spacing, touchTarget, type } from '../theme';
 
-type Props = NativeStackScreenProps<PatientsStackParamList, 'PatientList'>;
+type Props = StackScreenProps<PatientsStackParamList, 'PatientList'>;
 
 function useDebounced<T>(value: T, ms: number) {
   const [debounced, setDebounced] = useState(value);

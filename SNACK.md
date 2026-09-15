@@ -24,6 +24,16 @@ Failed to create snack: Error generating snackObj: Error parsing files: Failed t
 
 So `main` has no PNG, SVG, font, or other binary files: the Expo template icons were removed from `assets/` and `app.json`, and README screenshots live on the `screenshots` branch. If you see this error again, run `git ls-files | grep -vE '\.(tsx?|jsx?|json|md)$'` and move anything listed (other than dotfiles) off `main`. Once Snack fixes asset uploads, app icons can come back.
 
+### Dependencies Snack cannot build
+
+Snack builds each dependency that is not preloaded with its own package service. That service currently fails on `react-native-screens` 4.19 and later, which is why the app uses the JavaScript stack navigator and does not depend on `react-native-screens`. If Snack shows "Failed to resolve dependency" after an upgrade, check the package with:
+
+```
+https://snackager.eascdn.net/bundle/<name>@<version>?version_snackager=true&sdkVersion=56.0.0&platforms=ios,android,web
+```
+
+A response with a `handle` field is built; `"pending": true` means try again in a minute; "Module build failed" means Snack cannot load that version.
+
 ### Snack title
 
 ```

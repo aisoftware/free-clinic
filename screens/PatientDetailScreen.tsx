@@ -1,4 +1,4 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { StackScreenProps } from '@react-navigation/stack';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -17,7 +17,7 @@ import { MedicationsTab } from './patient/MedicationsTab';
 import { SummaryTab } from './patient/SummaryTab';
 import { VitalsTab } from './patient/VitalsTab';
 
-type Props = NativeStackScreenProps<PatientsStackParamList, 'PatientDetail'>;
+type Props = StackScreenProps<PatientsStackParamList, 'PatientDetail'>;
 type TabKey = 'summary' | 'conditions' | 'medications' | 'vitals' | 'encounters';
 
 const TABS: { key: TabKey; label: string; capability: Capability | null }[] = [

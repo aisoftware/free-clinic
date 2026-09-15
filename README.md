@@ -71,7 +71,7 @@ GET {base}/Encounter?patient={id}&_sort=-date
 
 ```
 App.tsx                 entry (Snack and local)
-navigation/             bottom tabs plus the Patients stack
+navigation/             bottom tabs plus the Patients stack (JS stack navigator)
 screens/                Today, Patients, PatientDetail (+ patient/ tabs), Intake (+ intake/ steps), PapQueue, About
 components/             Screen wrapper (banner and footer), state views, form controls, signature pad, sparkline
 lib/fhir/client.ts      search<K>(resourceType, params, options) -> { entries, total, source }
@@ -135,11 +135,12 @@ SMART is the primary source.
 | --- | --- | --- |
 | `expo`, `react`, `react-native`, `react-native-web`, `react-dom` | runtime | core modules |
 | `react-native-safe-area-context`, `@expo/vector-icons` | safe areas, icons | bundled in Snack |
-| `@react-navigation/native`, `native-stack`, `bottom-tabs`, `elements` | navigation, header height for keyboard avoidance | resolved from npm |
-| `react-native-screens`, `react-native-svg` | navigation screens, sparklines and signature pad | native modules included in Expo Go |
+| `@react-navigation/native`, `stack`, `bottom-tabs`, `elements` | navigation, header height for keyboard avoidance | built by Snack's package service |
+| `react-native-gesture-handler` | stack navigator gestures | bundled in Snack |
+| `react-native-svg`, `@react-native-masked-view/masked-view` | sparklines and signature pad; header back-button mask | built by Snack's package service; native code included in Expo Go |
 | `expo-clipboard`, `expo-status-bar` | Copy JSON, status bar | Expo modules included in Expo Go |
 
-No substitutions were needed. `expo-router` was not used, as required. No FHIR typings package was added; the hand-written types cover the seven resources used.
+One substitution: `@react-navigation/native-stack` was replaced with the JavaScript `@react-navigation/stack`, and `react-native-screens` was removed. Snack's package service fails to build `react-native-screens` 4.19 through 4.26 (a codegen error in `FullWindowOverlayNativeComponent.ts`), so a native-stack Snack cannot load; bottom tabs and the JS stack only use `react-native-screens` when it is present. Every remaining dependency was confirmed to build on Snack for SDK 56. `expo-router` was not used, as required. No FHIR typings package was added; the hand-written types cover the seven resources used.
 
 **Quality checks**
 

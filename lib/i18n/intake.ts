@@ -7,6 +7,14 @@ export type IntakeLanguage = 'en' | 'es';
 // patient's preferred language. Language names are shown in their own language on purpose.
 export const LANGUAGE_NAMES: Record<IntakeLanguage, string> = { en: 'English', es: 'Español' };
 
+const ROLE_NAMES_EN: Record<Role, string> = {
+  frontDesk: 'Front Desk',
+  nurse: 'Nurse',
+  provider: 'Provider',
+  pharmacy: 'Pharmacy',
+  student: 'Medical Student',
+};
+
 const en = {
   title: 'New patient intake',
   stepOf: (n: number, total: number) => `Step ${n} of ${total}`,
@@ -71,13 +79,7 @@ const en = {
   copied: 'Copied to clipboard',
   startOver: 'Start a new intake',
 
-  roles: {
-    frontDesk: 'Front Desk',
-    nurse: 'Nurse',
-    provider: 'Provider',
-    pharmacy: 'Pharmacy',
-    student: 'Medical Student',
-  } satisfies Record<Role, string>,
+  roles: ROLE_NAMES_EN,
 };
 
 export type IntakeStrings = typeof en;
