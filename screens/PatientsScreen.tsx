@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { CheckInChip } from '../components/Chip';
+import { LockNotice } from '../components/LockNotice';
 import { Screen } from '../components/Screen';
 import { EmptyState, ErrorState, SkeletonRows } from '../components/StateViews';
 import { search } from '../lib/fhir/client';
 import { PatientVM, toPatientVM } from '../lib/fhir/mappers';
+import { can } from '../lib/roles';
 import type { PatientsStackParamList } from '../navigation/types';
 import { checkInStatusOf, useAppState } from '../state/AppState';
 import { useQuery } from '../state/useQuery';
@@ -25,22 +27,33 @@ function useDebounced<T>(value: T, ms: number) {
 }
 
 export function PatientsScreen({ navigation }: Props) {
-  const { checkIns, setLoadedPatients } = useAppState();
+  const { role, checkIns, setLoadedPatients, dataEpoch } = useAppState();
+  const allowed = can(role, 'patients.list');
   const [term, setTerm] = useState('');
   const [focused, setFocused] = useState(false);
   const name = useDebounced(term.trim(), 350);
 
-  const query = useQuery(async ({ fresh }) => {
-    const result = await search('Patient', { name: name || undefined, _count: 20, _sort: 'family' }, { fresh });
-    return result.entries.map((p) => toPatientVM(p, result.source));
-  }, [name]);
+  const query = useQuery(
+    async ({ fresh }) => {
+      if (!allowed) return [];
+      const result = await search('Patient', { name: name || undefined, _count: 20, _sort: 'family' }, { fresh });
+      return result.entries.map((p) => toPatientVM(p, result.source));
+    },
+    [name, allowed, dataEpoch],
+  );
 
   useEffect(() => {
-    if (query.data && !name) setLoadedPatients(query.data);
-  }, [query.data, name, setLoadedPatients]);
+    if (query.data && !name && allowed) setLoadedPatients(query.data);
+  }, [query.data, name, allowed, setLoadedPatients]);
 
   let content;
-  if (query.loading && !query.data) {
+  if (!allowed) {
+    content = (
+      <View style={styles.listContent}>
+        <LockNotice capability="patients.list" />
+      </View>
+    );
+  } else if (query.loading && !query.data) {
     content = <SkeletonRows count={7} />;
   } else if (query.error && !query.data) {
     content = <ErrorState message={query.error} onRetry={query.reload} />;

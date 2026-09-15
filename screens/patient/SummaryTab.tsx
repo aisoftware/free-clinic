@@ -44,13 +44,13 @@ export function SummaryTab({ patient }: { patient: PatientVM }) {
                 label={s.label}
                 icon={s.icon}
                 variant={status === s.status ? 'primary' : 'secondary'}
-                onPress={() => setCheckIn(patient.key, s.status)}
+                onPress={() => setCheckIn(patient, s.status)}
                 accessibilityHint={`Sets check-in status to ${CHECK_IN_LABELS[s.status]}`}
                 style={styles.button}
               />
             ))}
             {status !== 'notArrived' ? (
-              <Button label="Reset" variant="ghost" onPress={() => setCheckIn(patient.key, 'notArrived')} style={styles.button} />
+              <Button label="Reset" variant="ghost" onPress={() => setCheckIn(patient, 'notArrived')} style={styles.button} />
             ) : null}
           </View>
         ) : (

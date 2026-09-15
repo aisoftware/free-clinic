@@ -57,6 +57,22 @@ export function can(role: Role, capability: Capability): boolean {
   return TABLE[capability].includes(role);
 }
 
+/** The access table as rows, for display on the About screen. */
+export function accessMatrix(): { capability: Capability; description: string; roles: Role[] }[] {
+  return (Object.keys(TABLE) as Capability[]).map((capability) => ({
+    capability,
+    description: DESCRIPTIONS[capability],
+    roles: TABLE[capability],
+  }));
+}
+
+const WRITE_CAPABILITIES: Capability[] = ['patient.checkIn', 'intake.create', 'pap.update'];
+
+/** A role with no workflow-changing capability, such as a supervised student. */
+export function isReadOnly(role: Role): boolean {
+  return !WRITE_CAPABILITIES.some((c) => can(role, c));
+}
+
 export function roleLabel(role: Role): string {
   return ROLES.find((r) => r.id === role)?.label ?? role;
 }

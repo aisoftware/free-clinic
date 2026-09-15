@@ -9,18 +9,18 @@ export const SYNTHETIC_NOTICE = 'Synthetic data from a public FHIR sandbox. Not 
 
 interface ScreenProps {
   children: ReactNode;
-  /** Set when the screen sits under a navigator that does not already pad the bottom inset. */
-  padBottomInset?: boolean;
+  /** Set when the screen has no navigation header, so the banner and content clear the status bar. */
+  padTopInset?: boolean;
 }
 
 /** Every screen carries the data-source banner and the synthetic-data notice. */
-export function Screen({ children, padBottomInset = false }: ScreenProps) {
+export function Screen({ children, padTopInset = false }: ScreenProps) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, padTopInset && { paddingTop: insets.top }]}>
       <SourceBanner />
       <View style={styles.body}>{children}</View>
-      <View style={[styles.footer, padBottomInset && { paddingBottom: spacing.sm + insets.bottom }]}>
+      <View style={styles.footer}>
         <Text style={styles.footerText} accessibilityRole="text">
           {SYNTHETIC_NOTICE}
         </Text>

@@ -9,6 +9,7 @@ import type { Role } from '../lib/roles';
 export type CheckInStatus = 'notArrived' | 'arrived' | 'roomed' | 'completed';
 
 export interface CheckIn {
+  patient: PatientVM;
   status: CheckInStatus;
   updatedAt: string;
   updatedBy: Role;
@@ -25,12 +26,17 @@ interface AppState {
   role: Role;
   setRole: (role: Role) => void;
   checkIns: Record<string, CheckIn>;
-  setCheckIn: (patientKey: string, status: CheckInStatus) => void;
+  setCheckIn: (patient: PatientVM, status: CheckInStatus) => void;
+  /** Replaces all check-ins at once, used by the simulated shift on the Today screen. */
+  replaceCheckIns: (entries: { patient: PatientVM; status: CheckInStatus }[]) => void;
   /** Patients most recently loaded by the Patients list; the PAP queue works from this set. */
   loadedPatients: PatientVM[];
   setLoadedPatients: (patients: PatientVM[]) => void;
   pap: Record<string, PapProgress>;
   updatePap: (itemKey: string, change: Partial<PapProgress>) => void;
+  /** Incremented when the data source changes so list screens reload. */
+  dataEpoch: number;
+  bumpDataEpoch: () => void;
 }
 
 const Ctx = createContext<AppState | null>(null);
@@ -40,11 +46,25 @@ export function AppStateProvider({ children, initialRole = 'nurse' }: { children
   const [checkIns, setCheckIns] = useState<Record<string, CheckIn>>({});
   const [loadedPatients, setLoadedPatients] = useState<PatientVM[]>([]);
   const [pap, setPap] = useState<Record<string, PapProgress>>({});
+  const [dataEpoch, setDataEpoch] = useState(0);
 
   const setCheckIn = useCallback(
-    (patientKey: string, status: CheckInStatus) =>
-      setCheckIns((prev) => ({ ...prev, [patientKey]: { status, updatedAt: new Date().toISOString(), updatedBy: role } })),
+    (patient: PatientVM, status: CheckInStatus) =>
+      setCheckIns((prev) => ({ ...prev, [patient.key]: { patient, status, updatedAt: new Date().toISOString(), updatedBy: role } })),
     [role],
+  );
+
+  const replaceCheckIns = useCallback(
+    (entries: { patient: PatientVM; status: CheckInStatus }[]) => {
+      const now = Date.now();
+      const next: Record<string, CheckIn> = {};
+      entries.forEach((e, i) => {
+        // Stagger times so the simulated shift reads like a morning of arrivals.
+        next[e.patient.key] = { ...e, updatedAt: new Date(now - (entries.length - i) * 7 * 60_000).toISOString(), updatedBy: 'frontDesk' };
+      });
+      setCheckIns(next);
+    },
+    [],
   );
 
   const updatePap = useCallback(
@@ -53,9 +73,23 @@ export function AppStateProvider({ children, initialRole = 'nurse' }: { children
     [],
   );
 
+  const bumpDataEpoch = useCallback(() => setDataEpoch((n) => n + 1), []);
+
   const value = useMemo(
-    () => ({ role, setRole, checkIns, setCheckIn, loadedPatients, setLoadedPatients, pap, updatePap }),
-    [role, checkIns, setCheckIn, loadedPatients, pap, updatePap],
+    () => ({
+      role,
+      setRole,
+      checkIns,
+      setCheckIn,
+      replaceCheckIns,
+      loadedPatients,
+      setLoadedPatients,
+      pap,
+      updatePap,
+      dataEpoch,
+      bumpDataEpoch,
+    }),
+    [role, checkIns, setCheckIn, replaceCheckIns, loadedPatients, pap, updatePap, dataEpoch, bumpDataEpoch],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

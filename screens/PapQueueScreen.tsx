@@ -26,23 +26,24 @@ export const PAP_STEPS: { id: PapStep; short: string; label: string }[] = [
 const DEFAULT_PROGRESS: PapProgress = { step: 'identified', notes: '' };
 
 export function PapQueueScreen() {
-  const { role, loadedPatients, setLoadedPatients, pap, updatePap } = useAppState();
+  const { role, loadedPatients, setLoadedPatients, pap, updatePap, dataEpoch } = useAppState();
   const headerHeight = useHeaderHeight();
   const allowed = can(role, 'pap.view');
   const editable = can(role, 'pap.update');
   const patientKeys = loadedPatients.map((p) => p.key).join('|');
 
-  const last = useRef<{ keys: string; value: PapQueueResult & { patients: PatientVM[] } } | null>(null);
+  const last = useRef<{ keys: string; epoch: number; value: PapQueueResult & { patients: PatientVM[] } } | null>(null);
 
   const query = useQuery(
     async ({ fresh }) => {
       // Roles without access never trigger the medication and coverage searches.
       if (!allowed) return { items: [], checkedPatients: 0, failedPatients: 0, needsCoverageCheck: 0, patients: [] };
-      if (!fresh && last.current && last.current.keys === patientKeys) return last.current.value;
+      const epochChanged = last.current !== null && last.current.epoch !== dataEpoch;
+      if (!fresh && !epochChanged && last.current && last.current.keys === patientKeys) return last.current.value;
       // The queue works from the patients on today's list. If the Patients tab has not been
       // opened yet, load the same list here so the queue is never empty for that reason alone.
       let patients = loadedPatients;
-      if (patients.length === 0 || fresh) {
+      if (patients.length === 0 || fresh || epochChanged) {
         const result = await search('Patient', { _count: 20, _sort: 'family' }, { fresh });
         patients = result.entries.map((p) => toPatientVM(p, result.source));
       }
@@ -51,10 +52,10 @@ export function PapQueueScreen() {
         throw new Error(`None of the ${patients.length} patients could be checked.`);
       }
       const value = { ...queue, patients };
-      last.current = { keys: patients.map((p) => p.key).join('|'), value };
+      last.current = { keys: patients.map((p) => p.key).join('|'), epoch: dataEpoch, value };
       return value;
     },
-    [allowed, patientKeys],
+    [allowed, patientKeys, dataEpoch],
   );
 
   useEffect(() => {
