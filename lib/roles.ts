@@ -40,6 +40,19 @@ const TABLE: Record<Capability, Role[]> = {
   'pap.update': ['pharmacy'],
 };
 
+const DESCRIPTIONS: Record<Capability, string> = {
+  'patients.list': 'The patient list',
+  'patient.contact': 'Patient phone numbers',
+  'patient.checkIn': 'Changing check-in status',
+  'chart.conditions': 'Conditions',
+  'chart.medications': 'Medications',
+  'chart.vitals': 'Vital signs',
+  'chart.encounters': 'Encounter history',
+  'intake.create': 'New patient intake',
+  'pap.view': 'The PAP queue',
+  'pap.update': 'Updating PAP applications',
+};
+
 export function can(role: Role, capability: Capability): boolean {
   return TABLE[capability].includes(role);
 }
@@ -51,5 +64,5 @@ export function roleLabel(role: Role): string {
 /** Plain-language reason shown next to a lock icon wherever something is hidden. */
 export function lockReason(role: Role, capability: Capability): string {
   const allowed = TABLE[capability].map(roleLabel).join(', ');
-  return `Not available to ${roleLabel(role)} (minimum necessary). Available to: ${allowed}.`;
+  return `${DESCRIPTIONS[capability]}: not available to ${roleLabel(role)} (minimum necessary). Available to ${allowed}.`;
 }

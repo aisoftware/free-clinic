@@ -169,10 +169,11 @@ export async function search<K extends ResourceType>(
 ): Promise<SearchResult<ResourceByType[K]>> {
   const pinned = options.source;
 
-  if (forceSample || pinned === 'sample') {
-    const result = searchSample(resourceType, params);
+  // Forcing sample data only redirects list-style searches; a chart opened from a sandbox stays on
+  // its server rather than silently showing another record set's empty results.
+  if (pinned === 'sample' || (forceSample && !pinned)) {
     if (!pinned) publish('sample');
-    return result;
+    return searchSample(resourceType, params);
   }
 
   if (pinned) {
@@ -194,15 +195,4 @@ export async function search<K extends ResourceType>(
   }
   publish('sample');
   return searchSample(resourceType, params);
-}
-
-/** Search every page-one result for several patients in parallel, keeping per-patient failures isolated. */
-export async function searchSettled<K extends ResourceType>(
-  resourceType: K,
-  requests: { params: SearchParams; source: DataSource }[],
-): Promise<(SearchResult<ResourceByType[K]> | FhirError)[]> {
-  const results = await Promise.allSettled(requests.map((r) => search(resourceType, r.params, { source: r.source })));
-  return results.map((r) =>
-    r.status === 'fulfilled' ? r.value : r.reason instanceof FhirError ? r.reason : new FhirError(String(r.reason), 'network'),
-  );
 }

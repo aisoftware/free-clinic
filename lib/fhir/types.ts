@@ -144,7 +144,9 @@ export interface Consent extends Resource {
   dateTime?: string;
   performer?: Reference[];
   organization?: Reference[];
+  policy?: { authority?: string; uri?: string }[];
   policyRule?: CodeableConcept;
+  verification?: { verified: boolean; verifiedWith?: Reference; verificationDate?: string }[];
   provision?: { type?: 'deny' | 'permit'; actor?: { role: CodeableConcept; reference: Reference }[] };
   sourceAttachment?: { contentType?: string; data?: string; title?: string; creation?: string };
 }

@@ -4,6 +4,8 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { RoleHeaderButton } from '../components/RolePicker';
+import { IntakeScreen } from '../screens/IntakeScreen';
+import { PapQueueScreen } from '../screens/PapQueueScreen';
 import { PatientDetailScreen } from '../screens/PatientDetailScreen';
 import { PatientsScreen } from '../screens/PatientsScreen';
 import { colors, type } from '../theme';
@@ -44,6 +46,8 @@ export function RootNavigator() {
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: colors.textMuted,
           tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+          headerTitleStyle: { ...type.heading, color: colors.text },
+          headerRight: () => <RoleHeaderButton />,
         }}
       >
         <Tab.Screen
@@ -53,6 +57,23 @@ export function RootNavigator() {
             title: 'Patients',
             headerShown: false,
             tabBarIcon: ({ color, size }) => <Ionicons name="people-outline" color={color} size={size} />,
+          }}
+        />
+        <Tab.Screen
+          name="IntakeTab"
+          component={IntakeScreen}
+          options={{
+            title: 'Intake',
+            tabBarLabel: 'Intake',
+            tabBarIcon: ({ color, size }) => <Ionicons name="clipboard-outline" color={color} size={size} />,
+          }}
+        />
+        <Tab.Screen
+          name="PapTab"
+          component={PapQueueScreen}
+          options={{
+            title: 'PAP Queue',
+            tabBarIcon: ({ color, size }) => <Ionicons name="medkit-outline" color={color} size={size} />,
           }}
         />
       </Tab.Navigator>
