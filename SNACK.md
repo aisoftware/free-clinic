@@ -7,7 +7,7 @@
 3. In the left sidebar, open the **...** menu next to the file list and choose **Import git repository**.
 4. Paste `https://github.com/aisoftware/free-clinic` as the repository URL. Select **Show advanced options**, leave **Folder path** empty, and set **Branch name** to `main`.
 5. Select **Import repository** and wait for the redirect to the new Snack.
-6. Confirm the SDK version selector at the bottom of the editor shows **56.0.0**. Snack reads it from `expo` in `package.json`. SDK 56 is hidden from Snack's picker while its support is in preview, so if a different SDK is selected, open the Snack URL with `?sdkVersion=56.0.0` appended and save again.
+6. Confirm the SDK version selector at the bottom of the editor shows **55.0.0**. Snack reads it from `expo` in `package.json`.
 7. Confirm the **Web** preview loads the Today screen and that the Patients tab lists patients without the "Sandbox unavailable" banner.
 8. Open the project settings (the Snack name at the top of the editor) and set the title and description below. Save.
 9. Copy the Snack URL into the README (top of the file) and into the LinkedIn first comment.
@@ -29,7 +29,7 @@ So `main` has no PNG, SVG, font, or other binary files: the Expo template icons 
 Snack builds each dependency that is not preloaded with its own package service. That service currently fails on `react-native-screens` 4.19 and later. The app therefore uses its own tab and stack navigators on `@react-navigation/native` and has no dependency that needs `react-native-screens`. If Snack shows "Failed to resolve dependency" after an upgrade, check the package with:
 
 ```
-https://snackager.eascdn.net/bundle/<name>@<version>?version_snackager=true&sdkVersion=56.0.0&platforms=ios,android,web
+https://snackager.eascdn.net/bundle/<name>@<version>?version_snackager=true&sdkVersion=55.0.0&platforms=ios,android,web
 ```
 
 A response with a `handle` field is built; `"pending": true` means try again in a minute; "Module build failed" means Snack cannot load that version.
@@ -50,17 +50,19 @@ Volunteer-facing app for free and charitable clinics, built against FHIR R4. Rol
 
 ## Running on a phone
 
-The App Store and Play Store versions of Expo Go are 57.0.9 and run SDK 57 projects only. This Snack is SDK 56 because Snack does not support SDK 57 yet, so the store app will refuse to open it. Options until Snack ships SDK 57:
+The fastest native check is inside Snack itself: the **iOS** and **Android** tabs above the preview run the app on hosted simulators. On SDK 56 both crashed before the app loaded (Snack's SDK 56 runtime bundles two copies of `react-native-screens`), which is why the project is on SDK 55.
 
-- **Android:** install the SDK 56 Expo Go client (`Expo-Go-56.0.4.apk` from https://github.com/expo/expo-go-releases/releases/tag/Expo-Go-56.0.4), then scan the Snack QR code.
-- **iOS device:** Expo Go for older SDKs is not distributed through the App Store. Check whether your EAS CLI can build an SDK 56 client with `eas go` (Apple Developer account and TestFlight required). If it cannot, run the checklist on the iOS Simulator (`npx expo start`, then press `i`, which installs the matching Expo Go), and note simulator results as such.
+For a physical phone: the App Store and Play Store versions of Expo Go are 57.0.9 and run SDK 57 projects only, so they will not open this SDK 55 Snack.
+
+- **Android:** install the SDK 55 Expo Go client (`Expo-Go-55.0.7.apk` from https://github.com/expo/expo-go-releases/releases/tag/Expo-Go-55.0.7), then scan the Snack QR code.
+- **iOS device:** Expo Go for older SDKs is not distributed through the App Store. Check whether your EAS CLI can build an SDK 55 client with `eas go` (Apple Developer account and TestFlight required). Otherwise use Snack's iOS preview or the iOS Simulator (`npx expo start`, then press `i`, which installs the matching Expo Go), and note results as simulator results.
 - **Any phone browser:** the Snack web preview runs in mobile Safari and Chrome. It covers layout and data, not native gestures or keyboard behavior.
 
-When Snack supports SDK 57, upgrade with the steps in the README and use the store Expo Go.
+Before moving to a newer SDK, confirm Snack's runtime for that SDK has a single `react-native-screens` copy (search `runtime/yarn.lock` in the `expo/snack` repository) and that the iOS and Android previews start.
 
 ## Device checklist
 
-Run on one iOS and one Android device in Expo Go. For each failure, send back the device, OS version, screen, the step number, and what happened (a screen recording helps for gestures).
+Run on one iOS and one Android device in Expo Go, or in Snack's iOS and Android previews where a physical device is not available. For each failure, send back the device, OS version, screen, the step number, and what happened (a screen recording helps for gestures).
 
 | # | Area | Steps | Expected | iOS | Android |
 | --- | --- | --- | --- | --- | --- |

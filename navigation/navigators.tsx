@@ -26,7 +26,7 @@ import { Header, HeaderHeightContext } from './Header';
 
 // Tab and stack navigators built on React Navigation's own routers. The published
 // @react-navigation/bottom-tabs and /stack packages declare react-native-screens as a peer
-// dependency, which Expo Snack cannot build for SDK 56; these keep the same navigation state,
+// dependency, which Expo Snack cannot build; these keep the same navigation state,
 // actions, and Android back handling without it.
 
 export interface ScreenOptions {

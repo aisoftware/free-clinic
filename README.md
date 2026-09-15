@@ -45,7 +45,7 @@ The workflows come from volunteer CTO work at Health and Hope Clinic in Pensacol
 ```bash
 npm install
 npx expo start --web     # web preview
-npx expo start           # Expo Go on a device or simulator (SDK 56 client required)
+npx expo start           # Expo Go on a device or simulator (SDK 55 client required)
 npx tsc --noEmit         # type check
 ```
 
@@ -105,17 +105,18 @@ Checked on 2026-09-15.
 | --- | --- |
 | Latest Expo SDK (`exp.host/--/api/v2/versions`) | SDK 57.0.0 (React Native 0.86.3), released 2026-06-30 |
 | Snack SDK support (snack.expo.dev bundle and `expo/snack` source) | SDKs 50 to 56. SDK 56 is present but hidden from the picker and pinned to `56.0.0-preview.7`. SDK 57 is an open pull request (expo/snack#691). Default SDK is 54. |
+| Snack native previews by SDK (`runtime/yarn.lock` in `expo/snack`) | SDK 55 runtime: one `react-native-screens` (4.23.0). SDK 56 runtime: two copies (4.25.0-beta.3 and 4.25.2), and the iOS preview crashed with "Tried to register two views with the same name RNSScreen" before app code ran; Android failed too. SDK 57 pull request: two copies (4.25.2 and 4.26.2). |
 | Snack Git import | Infers the SDK from the `expo` version in `package.json` and reads only `dependencies`. Every non-code file is uploaded as an asset, and on 2026-09-15 that upload fails for all repositories (reproduced with Snack's own example repository), so `main` carries no image files. |
 | Expo Go in the App Store and Play Store | 57.0.9, which runs SDK 57 projects only |
 
-**Decision: built on SDK 56**, per the fallback rule. The Snack web preview works on SDK 56 today. Phones need an SDK 56 Expo Go client until Snack supports 57 (details in SNACK.md). When Snack ships SDK 57:
+**Decision: built on SDK 55.** The brief asked for SDK 57, or 56 if Snack lacked 57. The app was first built on SDK 56, and its Snack web preview worked, but Snack's iOS and Android previews crashed for any SDK 56 project because of the duplicated `react-native-screens` in Snack's runtime. SDK 55 is stable and visible in Snack's SDK picker, and its runtime is not affected. Phones need an SDK 55 Expo Go client (details in SNACK.md). To move to a newer SDK once Snack's runtime is fixed:
 
 ```bash
 npx expo install expo@~57.0.0 --fix
 npx tsc --noEmit
 ```
 
-Then update the SDK line in `CLAUDE.md` and this section, and re-run the SNACK.md checklist.
+Then check Snack's runtime lockfile for a single `react-native-screens`, confirm every dependency builds on Snack for that SDK (see SNACK.md), update the SDK line in `CLAUDE.md` and this section, and re-run the SNACK.md checklist.
 
 **FHIR sandboxes**
 
@@ -129,7 +130,7 @@ Then update the SDK line in `CLAUDE.md` and this section, and re-run the SNACK.m
 
 SMART is the primary source. HAPI was the brief's second fallback, but it was removed on 2026-09-15 (see Decisions).
 
-**Dependencies** (all installed with `npx expo install` for SDK 56)
+**Dependencies** (all installed with `npx expo install` for SDK 55)
 
 | Package | Why | Snack handling |
 | --- | --- | --- |
@@ -139,7 +140,7 @@ SMART is the primary source. HAPI was the brief's second fallback, but it was re
 | `react-native-svg` | sparklines and signature pad | built by Snack's package service; native code included in Expo Go |
 | `expo-clipboard`, `expo-status-bar` | Copy JSON, status bar | Expo modules included in Expo Go |
 
-One substitution: the published `@react-navigation/bottom-tabs`, `stack`, and `native-stack` packages were replaced by a small tab navigator and stack navigator in `navigation/navigators.tsx`, built on `@react-navigation/native`'s own `TabRouter`, `StackRouter`, and `useNavigationBuilder`. Snack's package service fails to build `react-native-screens` 4.19 through 4.26 (a codegen error in its native component specs). `native-stack` requires it outright, and `bottom-tabs` and `stack` declare it as a peer dependency, which puts a red "requires peer-dependency" bar with an "Add dependency" button on every Snack load; selecting it breaks the Snack. The in-house navigators keep React Navigation's state, actions, nested navigation, and Android back handling, and every remaining dependency was confirmed to build on Snack for SDK 56. `expo-router` was not used, as required. No FHIR typings package was added; the hand-written types cover the seven resources used.
+One substitution: the published `@react-navigation/bottom-tabs`, `stack`, and `native-stack` packages were replaced by a small tab navigator and stack navigator in `navigation/navigators.tsx`, built on `@react-navigation/native`'s own `TabRouter`, `StackRouter`, and `useNavigationBuilder`. Snack's package service fails to build `react-native-screens` 4.19 through 4.26 (a codegen error in its native component specs). `native-stack` requires it outright, and `bottom-tabs` and `stack` declare it as a peer dependency, which puts a red "requires peer-dependency" bar with an "Add dependency" button on every Snack load; selecting it breaks the Snack. The in-house navigators keep React Navigation's state, actions, nested navigation, and Android back handling, and every remaining dependency was confirmed to build on Snack for SDK 55. `expo-router` was not used, as required. No FHIR typings package was added; the hand-written types cover the seven resources used.
 
 **Quality checks**
 
@@ -148,8 +149,8 @@ One substitution: the published `@react-navigation/bottom-tabs`, `stack`, and `n
 | `npx tsc --noEmit` | 0 errors, strict mode, no `any` |
 | Emoji scan of tracked files | none |
 | Web preview at 390 px | all screens reviewed; no console errors |
-| Production web bundle (`npx expo export --platform web`) | 1.6 MB JavaScript |
-| Cold start to interactive Today screen, empty cache (median of 3) | 88 ms local; 1.8 s with 4G emulation (9 Mbps, 85 ms RTT, uncompressed) and 4x CPU slowdown |
+| Production web bundle (`npx expo export --platform web`) | 1.6 MB JavaScript (SDK 56 build, before the SDK 55 move and navigation change) |
+| Cold start to interactive Today screen, empty cache (median of 3, SDK 56 build) | 88 ms local; 1.8 s with 4G emulation (9 Mbps, 85 ms RTT, uncompressed) and 4x CPU slowdown |
 | Cold start to live patient rows rendered, same conditions | 0.3 s local; 2.1 s with 4G emulation and 4x CPU slowdown |
 | Offline fallback | FHIR host blocked in the browser: SMART tried twice, then sample data with the banner |
 
@@ -159,7 +160,7 @@ Native-only behavior (gestures, keyboard, Dynamic Type, safe areas) is covered b
 
 Choices made during the build, noted here as the brief asked.
 
-- **SDK 56** instead of 57, because Snack does not support 57 yet (see the verification log).
+- **SDK 55** instead of 57 or 56: Snack does not support 57, and its SDK 56 runtime crashes in the iOS and Android previews (see the verification log).
 - **No HAPI fallback.** The brief called for SMART, then the HAPI public server, then sample data. During a SMART outage on 2026-09-15 the app fell back to HAPI as designed and showed unnamed patients, patients with no identifiers, and placeholder names, because HAPI's public server holds uploads from anyone. SMART now falls back directly to the bundled sample data, which is clean and clearly labeled.
 - **Default role is Nurse**, which sees the full chart, so a first look shows the most. Role changes apply everywhere immediately.
 - **Locked tabs stay visible** with a lock icon and a one-line reason instead of disappearing, so "minimum necessary" is visible rather than implied.
