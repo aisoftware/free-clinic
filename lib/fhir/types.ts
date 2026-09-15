@@ -72,6 +72,8 @@ export interface Patient extends Resource {
   telecom?: ContactPoint[];
   gender?: 'male' | 'female' | 'other' | 'unknown';
   birthDate?: string;
+  deceasedBoolean?: boolean;
+  deceasedDateTime?: string;
   address?: { line?: string[]; city?: string; state?: string; postalCode?: string }[];
   communication?: { language: CodeableConcept; preferred?: boolean }[];
   extension?: { url: string; valueString?: string; valueDecimal?: number; valueInteger?: number }[];

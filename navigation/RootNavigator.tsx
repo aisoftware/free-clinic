@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { RoleHeaderButton } from '../components/RolePicker';
 import { PatientDetailScreen } from '../screens/PatientDetailScreen';
 import { PatientsScreen } from '../screens/PatientsScreen';
 import { colors, type } from '../theme';
@@ -18,12 +19,18 @@ const navTheme = {
 
 function PatientsNavigator() {
   return (
-    <PatientsStack.Navigator screenOptions={{ headerTitleStyle: { ...type.heading, color: colors.text }, headerTintColor: colors.primary }}>
+    <PatientsStack.Navigator
+      screenOptions={{
+        headerTitleStyle: { ...type.heading, color: colors.text },
+        headerTintColor: colors.primary,
+        headerRight: () => <RoleHeaderButton />,
+      }}
+    >
       <PatientsStack.Screen name="PatientList" component={PatientsScreen} options={{ title: 'Patients' }} />
       <PatientsStack.Screen
         name="PatientDetail"
         component={PatientDetailScreen}
-        options={({ route }) => ({ title: route.params.patient.givenFirst })}
+        options={{ title: 'Patient chart' }}
       />
     </PatientsStack.Navigator>
   );

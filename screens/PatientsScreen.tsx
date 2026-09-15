@@ -56,7 +56,7 @@ export function PatientsScreen({ navigation }: Props) {
           <PatientRow
             patient={item}
             status={checkInStatusOf(checkIns, item.key)}
-            onPress={() => navigation.navigate('PatientDetail', { patient: item })}
+            onPress={() => navigation.push('PatientDetail', { patient: item })}
           />
         )}
         ListEmptyComponent={

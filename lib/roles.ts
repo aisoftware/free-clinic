@@ -51,5 +51,5 @@ export function roleLabel(role: Role): string {
 /** Plain-language reason shown next to a lock icon wherever something is hidden. */
 export function lockReason(role: Role, capability: Capability): string {
   const allowed = TABLE[capability].map(roleLabel).join(', ');
-  return `Hidden for ${roleLabel(role)} (minimum necessary). Visible to: ${allowed}.`;
+  return `Not available to ${roleLabel(role)} (minimum necessary). Available to: ${allowed}.`;
 }
