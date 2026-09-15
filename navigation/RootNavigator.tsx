@@ -1,0 +1,54 @@
+import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import { PatientDetailScreen } from '../screens/PatientDetailScreen';
+import { PatientsScreen } from '../screens/PatientsScreen';
+import { colors, type } from '../theme';
+import type { PatientsStackParamList } from './types';
+
+const Tab = createBottomTabNavigator();
+const PatientsStack = createNativeStackNavigator<PatientsStackParamList>();
+
+const navTheme = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, primary: colors.primary, background: colors.background, card: colors.surface, text: colors.text, border: colors.border },
+};
+
+function PatientsNavigator() {
+  return (
+    <PatientsStack.Navigator screenOptions={{ headerTitleStyle: { ...type.heading, color: colors.text }, headerTintColor: colors.primary }}>
+      <PatientsStack.Screen name="PatientList" component={PatientsScreen} options={{ title: 'Patients' }} />
+      <PatientsStack.Screen
+        name="PatientDetail"
+        component={PatientDetailScreen}
+        options={({ route }) => ({ title: route.params.patient.givenFirst })}
+      />
+    </PatientsStack.Navigator>
+  );
+}
+
+export function RootNavigator() {
+  return (
+    <NavigationContainer theme={navTheme}>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.textMuted,
+          tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+        }}
+      >
+        <Tab.Screen
+          name="PatientsTab"
+          component={PatientsNavigator}
+          options={{
+            title: 'Patients',
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => <Ionicons name="people-outline" color={color} size={size} />,
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
