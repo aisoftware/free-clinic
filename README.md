@@ -2,6 +2,8 @@
 
 A volunteer-facing mobile app for free and charitable clinics, built with Expo and TypeScript against FHIR R4. It runs in Expo Snack with no changes and talks directly to the SMART Health IT FHIR sandbox, with bundled synthetic data as a fallback.
 
+**Live demo:** [Free Clinic Companion on Expo Snack](https://snack.expo.dev/@git/github.com/aisoftware/free-clinic?platform=web) (opens the web preview; works on desktop and phone browsers)
+
 > Synthetic data from public FHIR sandboxes. Not a medical record.
 
 | Patients (live SMART sandbox) | Patient chart, Vitals (live SMART sandbox) | PAP Queue (bundled sample data) |
@@ -38,7 +40,7 @@ The workflows come from volunteer CTO work at Health and Hope Clinic in Pensacol
 
 ## Run it
 
-**In Expo Snack:** follow [SNACK.md](SNACK.md).
+**In Expo Snack:** open the [live Snack](https://snack.expo.dev/@git/github.com/aisoftware/free-clinic?platform=web). It imports this repository's `main` branch, so it always reflects the latest push. To create your own copy, or to run the device checklist, follow [SNACK.md](SNACK.md).
 
 **Locally:**
 
