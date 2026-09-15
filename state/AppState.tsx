@@ -41,7 +41,7 @@ interface AppState {
 
 const Ctx = createContext<AppState | null>(null);
 
-export function AppStateProvider({ children, initialRole = 'nurse' }: { children: ReactNode; initialRole?: Role }) {
+export function AppStateProvider({ children, initialRole = 'nurse' }: { children: ReactNode | ReactNode[]; initialRole?: Role }) {
   const [role, setRole] = useState<Role>(initialRole);
   const [checkIns, setCheckIns] = useState<Record<string, CheckIn>>({});
   const [loadedPatients, setLoadedPatients] = useState<PatientVM[]>([]);

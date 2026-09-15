@@ -34,6 +34,8 @@ https://snackager.eascdn.net/bundle/<name>@<version>?version_snackager=true&sdkV
 
 A response with a `handle` field is built; `"pending": true` means try again in a minute; "Module build failed" means Snack cannot load that version.
 
+After import, Snack's Problems panel shows one expected warning: `@react-navigation/stack` and `@react-navigation/bottom-tabs` list `react-native-screens` as a peer dependency. **Do not select "Add dependency"** for it; adding `react-native-screens` brings back the build failure. Both navigators work without it.
+
 ### Snack title
 
 ```
