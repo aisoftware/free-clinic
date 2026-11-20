@@ -1,0 +1,51 @@
+Proprietary License
+
+Copyright (c) 2026 Applied Intelligence Software, Inc. All rights reserved.
+
+This repository and everything in it (the "Software") belongs to Applied
+Intelligence Software, Inc. It is shared only so that it can be reviewed.
+
+Permitted use
+
+You may view the Software, and download and run it on your own computer,
+only to evaluate the author's work as a job candidate or as a prospective
+client or partner.
+
+Not permitted
+
+Unless Applied Intelligence Software, Inc. gives you written permission
+first, you may not:
+
+1. copy, modify, merge, or make derivative works of the Software, except
+   for the temporary copies needed to view or run it for the permitted use;
+2. publish, distribute, sublicense, sell, or otherwise make the Software
+   available to anyone else;
+3. use the Software, in whole or in part, for any commercial or production
+   purpose;
+4. use the Software, in whole or in part, to train, fine-tune, or evaluate
+   machine learning or artificial intelligence models, or to build datasets.
+
+No other rights
+
+No patent, trademark, or other license is granted, by implication, estoppel,
+or otherwise. Making the Software visible, for example in a public
+repository, grants no rights beyond those stated here.
+
+Ending this permission
+
+This permission ends automatically if you break these terms, and Applied
+Intelligence Software, Inc. may end it at any time by asking. When it ends,
+you must stop using the Software and delete any copies you have.
+
+No warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+For permission beyond these terms, contact Applied Intelligence Software, Inc.
+through https://github.com/aisoftware.
