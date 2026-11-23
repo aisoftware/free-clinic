@@ -197,3 +197,10 @@ Choices made during the build, noted here as the brief asked.
 ## Author
 
 Larry Brooks, Applied Intelligence Software. [LinkedIn](https://www.linkedin.com/in/aisoftware)
+
+## License
+
+Copyright (c) 2026 Applied Intelligence Software, Inc. All rights reserved.
+This code is shared for review only: you may view it and run it locally to
+evaluate the author's work, but you may not copy, modify, redistribute, use it
+commercially, or use it to train AI models. See [LICENSE](LICENSE).
